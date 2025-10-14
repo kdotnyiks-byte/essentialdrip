@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop - Essential Drip Apparel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-content container">
+            <a href="index.html" class="logo">
+                Essential <span class="logo-text">Drip</span> Apparel
+            </a>
+            
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="new-in.html">New In</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            
+            <a href="cart.html" class="cart-icon">
+                🛒
+                <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="page-container">
+        <h1 class="page-title">Shop All Products</h1>
+        
+        <!-- Category Filter -->
+        <div class="filter-buttons">
+            <button class="btn btn-primary" onclick="filterProducts('all')">All</button>
+            <button class="btn btn-secondary" onclick="filterProducts('tshirts')">T-Shirts</button>
+            <button class="btn btn-secondary" onclick="filterProducts('shoes')">Shoes</button>
+            <button class="btn btn-secondary" onclick="filterProducts('cargo-pants')">Cargo Pants</button>
+            <button class="btn btn-secondary" onclick="filterProducts('jeans')">Jeans</button>
+        </div>
+        
+        <div class="products-grid" id="productsContainer">
+            <!-- Products will be loaded by JavaScript -->
+        </div>
+    </div>
+
+    <!-- WhatsApp Button -->
+    <a href="https://wa.me/263781527753" target="_blank" class="whatsapp-button" title="Chat on WhatsApp">
+        💬
+    </a>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <h3>Essential Drip Apparel</h3>
+                    <p>Premium streetwear fashion for the modern generation.</p>
+                </div>
+                <div>
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="shop.html">Shop</a></li>
+                        <li><a href="new-in.html">New In</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Categories</h3>
+                    <ul>
+                        <li><a href="shop.html?category=tshirts">T-Shirts</a></li>
+                        <li><a href="shop.html?category=shoes">Shoes</a></li>
+                        <li><a href="shop.html?category=cargo-pants">Cargo Pants</a></li>
+                        <li><a href="shop.html?category=jeans">Jeans</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Contact</h3>
+                    <ul>
+                        <li>WhatsApp: +263 781527753</li>
+                        <li>Email: info@essentialdrip.com</li>
+                        <li><a href="contact.html">Contact Form</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Essential Drip Apparel. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="products.js"></script>
+    <script src="cart.js"></script>
+    <script>
+        let currentCategory = 'all';
+        
+        function filterProducts(category) {
+            currentCategory = category;
+            
+            // Update button styles
+            document.querySelectorAll('.filter-buttons .btn').forEach(btn => {
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-secondary');
+            });
+            event.target.classList.remove('btn-secondary');
+            event.target.classList.add('btn-primary');
+            
+            loadProducts();
+        }
+        
+        function loadProducts() {
+            const container = document.getElementById('productsContainer');
+            let filteredProducts = products;
+            
+            if (currentCategory !== 'all') {
+                filteredProducts = products.filter(p => p.category === currentCategory);
+            }
+            
+            container.innerHTML = filteredProducts.map(product => createProductCard(product)).join('');
+        }
+        
+        // Check URL for category parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const categoryParam = urlParams.get('category');
+        if (categoryParam) {
+            currentCategory = categoryParam;
+            document.querySelectorAll('.filter-buttons .btn').forEach(btn => {
+                btn.classList.remove('btn-primary');
+                btn.classList.add('btn-secondary');
+            });
+            const buttons = document.querySelectorAll('.filter-buttons .btn');
+            const categoryMap = { 'all': 0, 'tshirts': 1, 'shoes': 2, 'cargo-pants': 3, 'jeans': 4 };
+            const index = categoryMap[categoryParam] || 0;
+            if (buttons[index]) {
+                buttons[index].classList.remove('btn-secondary');
+                buttons[index].classList.add('btn-primary');
+            }
+        }
+        
+        loadProducts();
+        updateCartBadge();
+    </script>
+</body>
+</html>
